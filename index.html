@@ -161,7 +161,7 @@ const overlayMsg   = document.getElementById('overlay-msg');
 const overlayScore = document.getElementById('overlay-score');
 const btn = document.getElementById('btn');
 
-let snake, dir, nextDir, food, score, best, level, speed, loop, paused, running;
+let snake, dir, nextDir, food, score, best, level, speed, loop, paused, running, foodEaten;
 
 best = parseInt(localStorage.getItem('snakeBest') || '0');
 bestEl.textContent = best;
@@ -179,6 +179,7 @@ function init() {
   speed = 140;
   paused = false;
   running = true;
+  foodEaten = 0;
   scoreEl.textContent = 0;
   levelEl.textContent = 1;
   placeFood();
@@ -210,6 +211,7 @@ function tick() {
 
   if (head.x === food.x && head.y === food.y) {
     score += level * 10;
+    foodEaten++;
     scoreEl.textContent = score;
     if (score > best) {
       best = score;
@@ -217,8 +219,7 @@ function tick() {
       localStorage.setItem('snakeBest', best);
     }
     // Level up every 5 foods
-    const foodCount = (score / (level * 10));
-    if (foodCount % 5 === 0) {
+    if (foodEaten % 5 === 0) {
       level = Math.min(level + 1, 10);
       levelEl.textContent = level;
       speed = Math.max(60, 140 - (level - 1) * 10);
